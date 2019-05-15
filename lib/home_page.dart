@@ -20,17 +20,9 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.all(8.0),
           child: new Card(
             child: new Column(
-              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                new ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: 10,
-                  itemBuilder: (context, count) {
-                    return new ListTile(
-                      title: Text("adad"),
-                    );
-                  },
-                )
+                Text("Category"),
+                FloomList()
               ],
             ),
           ),

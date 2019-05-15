@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FloomList extends StatefulWidget {
@@ -9,24 +10,56 @@ class _FloomListState extends State<FloomList> {
   final count = 10;
   @override
   Widget build(BuildContext context) {
-
-    final horizontalList = ListView.builder(
+    final itemList = new ListView.builder(
+      shrinkWrap: true,
+      physics: ClampingScrollPhysics(),
       scrollDirection: Axis.horizontal,
-      itemCount: count,
-      itemBuilder: (BuildContext context, int count) {
-        return new Text("hii");
+      itemBuilder: (context, count) {
+        return Container(
+          constraints: BoxConstraints(maxHeight: 100),
+          height: 100,
+          child: new Row(
+            children: <Widget>[
+              Card(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    new Image.asset("assets/images/flower1.jpg"),
+                    new Text("Name"),
+                    new Text("Price")
+                  ],
+                ),
+              )
+            ],
+          ),
+        );
       },
     );
-
-    return Expanded(
-      child: ListView.builder(
-        itemCount: 10,
-        itemBuilder: (context,count){
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: new Text("asdladj"),
-          );
-        },
+    return new SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: <Widget>[
+          Card(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                new Image.asset("assets/images/flower1.jpg"),
+                new Text("Name"),
+                new Text("Price")
+              ],
+            ),
+          ),
+          Card(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                new Image.asset("assets/images/flower1.jpg"),
+                new Text("Name"),
+                new Text("Price")
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

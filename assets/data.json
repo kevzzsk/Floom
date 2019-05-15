@@ -1,0 +1,112 @@
+{
+    "category": [
+      {
+        "name": "Flower",
+        "catNo": 1,
+        "items": [
+          {
+            "name": "Orchids",
+            "id": 1,
+            "price": "19.90",
+            "imageurl": "https://4.imimg.com/data4/SS/SS/GLADMIN-/data4-ww-ww-gladmin-wp-content-uploads-2016-11-varexdfnp147_dv-500x500.jpg"
+          },
+          {
+            "name": "Sunflower",
+            "id": 2,
+            "price": "9.90",
+            "imageurl": "https://valentines.floralgaragesg.com/wp-content/uploads/2018/12/img-2663.jpg"
+          },
+          {
+            "name": "Rose",
+            "id": 3,
+            "price": "19.90",
+            "imageurl": "https://res.cloudinary.com/bloomnation/c_pad,d_vendor:global:catalog:product:image.png,f_auto,fl_preserve_transparency,q_auto/v1499933621/vendor/6177/catalog/product/6/2/627480acb4669b2432cbd355ba13846e_41.jpg"
+          },
+          {
+            "name": "Pink Rose",
+            "id": 4,
+            "price": "25.90",
+            "imageurl": "https://www.choiceflowersuae.com/library/uploads/2016/10/just-because-copy.jpg"
+          },
+          {
+            "name": "Dried Flower",
+            "id": 5,
+            "price": "25.90",
+            "imageurl": "http://magnoliadriedflower.com/wp-content/uploads/2018/08/DFB-850K.jpeg"
+          }
+        ]
+      },
+      {
+        "name": "Mobile Gadget",
+        "catNo": 2,
+        "items": [
+          {
+            "name": "Iphone XR (red)",
+            "id": 1,
+            "price": "999.00",
+            "imageurl": "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/image/AppleInc/aos/published/images/i/ph/iphone/xr/iphone-xr-red-select-201809?wid=940&hei=1112&fmt=png-alpha&qlt=80&.v=1551226038669"
+          },
+          {
+            "name": "Samsung Galaxy S10",
+            "id": 2,
+            "price": "899.00",
+            "imageurl": "https://icdn2.digitaltrends.com/image/samsung-galaxy-s10-plus-review_2-640x640.jpg"
+          },
+          {
+            "name": "Xiaomi Redmi 6",
+            "id": 3,
+            "price": "599.00",
+            "imageurl": "https://i.gadgets360cdn.com/products/large/1529877080_635_xiaomi_redmi_6_pro.jpg"
+          },
+          {
+            "name": "Goggle Pixel 3",
+            "id": 4,
+            "price": "890.00",
+            "imageurl": "https://cdn.pocket-lint.com/r/s/970x/assets/images/145993-phones-review-review-pixel-2-xl-review-image2-mrh3lwdcvk.jpg"
+          },
+          {
+            "name": "Honor 10",
+            "id": 5,
+            "price": "499.00",
+            "imageurl": "https://zdnet2.cbsistatic.com/hub/i/r/2018/07/23/a6080d56-e796-4fe4-be49-0ef89d8a374e/thumbnail/770x433/d408d4bbca044a934d1f0dd444142910/honor-10header.jpg"
+          }
+        ]
+      },
+      {
+        "name": "Video Game",
+        "catNo": 3,
+        "items": [
+          {
+            "name": "Play Station 4 Pro",
+            "id": 1,
+            "price": "399.00",
+            "imageurl": "https://images-na.ssl-images-amazon.com/images/I/71XN6RnFchL._SL1500_.jpg"
+          },
+          {
+            "name": "Nintendo Switch",
+            "id": 2,
+            "price": "450.00",
+            "imageurl": "https://www.nintendo.com/content/dam/noa/en_US/hardware/switch/nintendo-switch-neon/gallery/bundle_color_console%20(3).jpg"
+          },
+          {
+            "name": "Xbox One S",
+            "id": 3,
+            "price": "350.00",
+            "imageurl": "https://target.scene7.com/is/image/Target/GUEST_f832dbaa-0857-4545-8dab-dda53a9f236a?wid=488&hei=488&fmt=pjpeg"
+          },
+          {
+            "name": "Xbox 360",
+            "id": 4,
+            "price": "360.00",
+            "imageurl": "https://i5.walmartimages.com/asr/4dbd6406-fec9-4a40-8176-8625eb0c1cf4_1.45b8d3f1608cb40b78376d73966a4123.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF"
+          },
+          {
+            "name": "Nintendo Wii",
+            "id": 5,
+            "price": "290.00",
+            "imageurl": "https://images-na.ssl-images-amazon.com/images/I/81us6cvlPXL._SX466_.jpg"
+          }
+        ]
+      }
+    ]
+  }
