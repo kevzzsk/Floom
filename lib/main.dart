@@ -1,6 +1,6 @@
-import 'package:floom/floom_list.dart';
 import 'package:floom/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
       initialRoute: "/",
       routes: <String, WidgetBuilder>{
         '/': (context) => MenuPage(),
-        '/home': (context)=> HomePage(),
+        '/home': (context) => HomePage(),
       },
     );
   }
@@ -26,15 +26,53 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPageState extends State<MenuPage> {
   int _selectedIndex = 0;
+  var itemList;
+  bool isSearching = false;
+  String searchText = "";
+  final TextEditingController _searchQuery = new TextEditingController();
+  Icon _actionIcon = new Icon(
+    Icons.search,
+    color: Color.fromARGB(255, 250, 82, 32),
+  );
+  Widget appBarTitle = Text(
+    "Floom",
+    style: TextStyle(
+        fontFamily: 'Montserrat',
+        fontWeight: FontWeight.w700,
+        color: Color.fromARGB(255, 250, 82, 32)),
+  );
 
-  Widget _buildBody({int selectedTab}){
-    switch(selectedTab){
-            case 0: return new HomePage();
-            // case 1: return new CustomPage();
-            // case 2: return new OrderPage();
-            // case 3: return new AccountPage();
-          }
+  _MenuPageState() {
+    _searchQuery.addListener(() {
+      if (_searchQuery.text.isEmpty) {
+        setState(() {
+          isSearching = false;
+          searchText = "";
+        });
+      } else {
+        setState(() {
+          isSearching = true;
+          searchText = _searchQuery.text;
+        });
+      }
+    });
+  }
 
+  Widget _buildBody({int selectedTab, callback}) {
+    switch (selectedTab) {
+      case 0:
+        return new HomePage(callback: callback);
+      // case 1: return new CustomPage();
+      // case 2: return new OrderPage();
+      // case 3: return new AccountPage();
+    }
+    return Container();
+  }
+
+  callback(itemList) {
+    setState(() {
+      itemList = itemList;
+    });
   }
 
   void _onItemTapped(int index) {
@@ -43,13 +81,112 @@ class _MenuPageState extends State<MenuPage> {
     });
   }
 
+  Widget _buildList() {
+    if (searchText.isNotEmpty) {
+      List _searchList = List();
+      for (int i = 0; i < itemList.length; i++) {
+        for (int j = 0; j < itemList[i]['items']; j++) {
+          String name = itemList[i]['items'][j]['name'];
+          if (name.toLowerCase().contains(searchText.toLowerCase())) {
+            _searchList.add(itemList[i]['items'][j]);
+          }
+        }
+      }
+      return GridView.builder(
+        gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        itemCount: _searchList.length,
+        itemBuilder: (context, index) {
+          return new Card(
+          elevation: 5,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Expanded(
+                  child: CachedNetworkImage(
+                width: 130,
+                placeholder: (context,string)=> CircularProgressIndicator(),
+                imageUrl: _searchList[index]['imageurl'],
+                fit: BoxFit.cover,
+              )),
+              new Text(_searchList[index]['name'],
+                  style: TextStyle(
+                      fontFamily: 'Montserrat', fontWeight: FontWeight.w300)),
+              new Text("\$" + _searchList[index]['price'],
+                  style: TextStyle(
+                      fontFamily: 'Montserrat', fontWeight: FontWeight.w300))
+            ],
+          ));
+        },
+      );
+    }else{
+      return Container();
+    }
+  }
+
+  Widget _buildAppBar(BuildContext context) {
+    return new AppBar(
+      title: this.appBarTitle,
+      actions: <Widget>[
+        IconButton(
+          icon: _actionIcon,
+          onPressed: () {
+            setState(() {
+              if (this._actionIcon.icon == Icons.search) {
+                // when search is initiated
+                this.isSearching = true;
+                this._actionIcon = new Icon(
+                  Icons.close,
+                  color: Color.fromARGB(255, 250, 82, 32),
+                );
+                this.appBarTitle = AnimatedOpacity(
+                    opacity: 1.0,
+                    duration: Duration(milliseconds: 10000),
+                    curve: Curves.easeInExpo,
+                    child: TextField(
+                      controller: _searchQuery,
+                      cursorColor: Color.fromARGB(255, 250, 82, 32),
+                      style: new TextStyle(
+                        color: Color.fromARGB(255, 250, 82, 32),
+                      ),
+                      decoration: new InputDecoration(
+                          prefixIcon: new Icon(Icons.search,
+                              color: Color.fromARGB(255, 250, 82, 32)),
+                          hintText: "Search...",
+                          hintStyle: new TextStyle(
+                              color: Color.fromARGB(255, 250, 82, 32)),
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color.fromARGB(255, 250, 82, 32)))),
+                    ));
+              } else {
+                // when X is pressed -> go back to normal
+                this._actionIcon = new Icon(
+                  Icons.search,
+                  color: Color.fromARGB(255, 250, 82, 32),
+                );
+                this.appBarTitle = Text(
+                  "Floom",
+                  style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w700,
+                      color: Color.fromARGB(255, 250, 82, 32)),
+                );
+                isSearching = false;
+                _searchQuery.clear();
+              }
+            });
+          },
+        ),
+      ],
+      backgroundColor: Colors.white,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: new AppBar(
-        title: Text("Floom"),
-      ),
-      body: HomePage(),
+      appBar: _buildAppBar(context),
+      body: isSearching? _buildList(): _buildBody(selectedTab: _selectedIndex, callback: callback),
       bottomNavigationBar: new BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -70,7 +207,10 @@ class _MenuPageState extends State<MenuPage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.yellow, // SELECTED ITEM COLOR
+        selectedItemColor:
+            Color.fromARGB(255, 250, 82, 32), // SELECTED ITEM COLOR
+        unselectedItemColor: Color.fromARGB(130, 250, 82, 32),
+        showUnselectedLabels: true,
         onTap: _onItemTapped,
       ),
     );
