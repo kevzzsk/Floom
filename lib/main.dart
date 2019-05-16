@@ -69,9 +69,9 @@ class _MenuPageState extends State<MenuPage> {
     return Container();
   }
 
-  callback(itemList) {
+  callback(itemList2) {
     setState(() {
-      itemList = itemList;
+      itemList = itemList2['category'];
     });
   }
 
@@ -85,7 +85,7 @@ class _MenuPageState extends State<MenuPage> {
     if (searchText.isNotEmpty) {
       List _searchList = List();
       for (int i = 0; i < itemList.length; i++) {
-        for (int j = 0; j < itemList[i]['items']; j++) {
+        for (int j = 0; j < itemList[i]['items'].length; j++) {
           String name = itemList[i]['items'][j]['name'];
           if (name.toLowerCase().contains(searchText.toLowerCase())) {
             _searchList.add(itemList[i]['items'][j]);
@@ -93,32 +93,47 @@ class _MenuPageState extends State<MenuPage> {
         }
       }
       return GridView.builder(
-        gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        gridDelegate:
+            new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemCount: _searchList.length,
         itemBuilder: (context, index) {
           return new Card(
-          elevation: 5,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Expanded(
-                  child: CachedNetworkImage(
-                width: 130,
-                placeholder: (context,string)=> CircularProgressIndicator(),
-                imageUrl: _searchList[index]['imageurl'],
-                fit: BoxFit.cover,
-              )),
-              new Text(_searchList[index]['name'],
-                  style: TextStyle(
-                      fontFamily: 'Montserrat', fontWeight: FontWeight.w300)),
-              new Text("\$" + _searchList[index]['price'],
-                  style: TextStyle(
-                      fontFamily: 'Montserrat', fontWeight: FontWeight.w300))
-            ],
-          ));
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25),
+                      topRight: Radius.circular(25))),
+              elevation: 5,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Container(
+                    height: 145,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(25),
+                          topRight: Radius.circular(25)),
+                      child: CachedNetworkImage(
+                        placeholder: (context, string) =>
+                            CircularProgressIndicator(),
+                        imageUrl: _searchList[index]['imageurl'],
+                        fit: BoxFit.cover,
+                        repeat: ImageRepeat.repeatX,
+                      ),
+                    ),
+                  ),
+                  new Text(_searchList[index]['name'],
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w300)),
+                  new Text("\$" + _searchList[index]['price'],
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w300))
+                ],
+              ));
         },
       );
-    }else{
+    } else {
       return Container();
     }
   }
@@ -133,7 +148,6 @@ class _MenuPageState extends State<MenuPage> {
             setState(() {
               if (this._actionIcon.icon == Icons.search) {
                 // when search is initiated
-                this.isSearching = true;
                 this._actionIcon = new Icon(
                   Icons.close,
                   color: Color.fromARGB(255, 250, 82, 32),
@@ -143,6 +157,7 @@ class _MenuPageState extends State<MenuPage> {
                     duration: Duration(milliseconds: 10000),
                     curve: Curves.easeInExpo,
                     child: TextField(
+                      autofocus: true,
                       controller: _searchQuery,
                       cursorColor: Color.fromARGB(255, 250, 82, 32),
                       style: new TextStyle(
@@ -186,7 +201,9 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(context),
-      body: isSearching? _buildList(): _buildBody(selectedTab: _selectedIndex, callback: callback),
+      body: isSearching
+          ? _buildList()
+          : _buildBody(selectedTab: _selectedIndex, callback: callback),
       bottomNavigationBar: new BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

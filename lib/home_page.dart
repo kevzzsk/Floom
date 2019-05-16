@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:floom/floom_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -13,24 +15,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List data;
+  var data;
 
-  Future _futureCallback(data) async {
-    widget.callback(data['category']);
-  }
-
+  // Future _futureCallback() async {
+  //   widget.callback(data['category']);
+  // }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: loadData(),
+      future: loadData(widget),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data != null) {
-            var data = snapshot.data;
-
-             // return item list to parent
-            _futureCallback(data);
+            // return item list to parent
+            data = snapshot.data;
 
             return new ListView.builder(
               itemCount: data['category'].length,
@@ -41,7 +40,8 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                         child: Text(
                           data['category'][index]['name'],
                           style: TextStyle(
@@ -68,8 +68,9 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Future loadData() async {
+Future loadData(widget) async {
   String jsonString = await rootBundle.loadString('assets/data.json');
   final jsonResponse = json.decode(jsonString);
+  widget.callback(jsonResponse);
   return jsonResponse;
 }
