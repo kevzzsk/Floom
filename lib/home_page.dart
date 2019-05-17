@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
                       Padding(
                         padding:
                             EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        child: Text(
+                        child: Text( 
                           data['category'][index]['name'],
                           style: TextStyle(
                               fontFamily: 'Montserrat',

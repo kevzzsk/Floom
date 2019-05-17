@@ -16,26 +16,31 @@ class _FloomListState extends State<FloomList> {
   @override
   Widget build(BuildContext context) {
     Widget _cardBuilder(metadata) {
-      return new Card(
-          elevation: 5,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Expanded(
-                  child: CachedNetworkImage(
-                width: 130,
-                placeholder: (context,string)=> CircularProgressIndicator(),
-                imageUrl: metadata['imageurl'],
-                fit: BoxFit.cover,
-              )),
-              new Text(metadata['name'],
-                  style: TextStyle(
-                      fontFamily: 'Montserrat', fontWeight: FontWeight.w300)),
-              new Text("\$" + metadata['price'],
-                  style: TextStyle(
-                      fontFamily: 'Montserrat', fontWeight: FontWeight.w300))
-            ],
-          ));
+      return InkWell(
+        onTap: (){
+          Navigator.pushNamed(context, '/item',arguments: metadata);
+        },
+        child: new Card(
+            elevation: 5,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Expanded(
+                    child: CachedNetworkImage(
+                  width: 130,
+                  placeholder: (context, string) => CircularProgressIndicator(),
+                  imageUrl: metadata['imageurl'],
+                  fit: BoxFit.cover,
+                )),
+                new Text(metadata['name'],
+                    style: TextStyle(
+                        fontFamily: 'Montserrat', fontWeight: FontWeight.w300)),
+                new Text("\$" + metadata['price'],
+                    style: TextStyle(
+                        fontFamily: 'Montserrat', fontWeight: FontWeight.w300))
+              ],
+            )),
+      );
     }
 
     return new Container(
@@ -50,4 +55,3 @@ class _FloomListState extends State<FloomList> {
     );
   }
 }
-

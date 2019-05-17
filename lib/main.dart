@@ -1,6 +1,8 @@
 import 'package:floom/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'route_gen.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,10 +13,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       initialRoute: "/",
-      routes: <String, WidgetBuilder>{
-        '/': (context) => MenuPage(),
-        '/home': (context) => HomePage(),
-      },
+      onGenerateRoute: RouteGenerator.generateRoute,
+      theme: ThemeData(
+        primaryColor: Colors.white,
+        hintColor: Color.fromARGB(255, 250, 82, 32),
+        accentColor: Color.fromARGB(255, 250, 82, 32)),
     );
   }
 }
@@ -215,7 +218,7 @@ class _MenuPageState extends State<MenuPage> {
             title: Text('Custom'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
+            icon: Icon(Icons.shopping_cart),
             title: Text('Orders'),
           ),
           BottomNavigationBarItem(
