@@ -21,36 +21,34 @@ class ItemPage extends StatelessWidget {
         ),
       ),
       body: Container(
-        child: Column(
+        child: ListView(
+          shrinkWrap: true,
           children: <Widget>[
-            ListView(
-              shrinkWrap: true,
-              children: <Widget>[
-                Text(data['name']),
-                Text(data['price']),
-                CachedNetworkImage(
-                  placeholder: (context, string) => CircularProgressIndicator(),
-                  imageUrl: data['imageurl'],
-                  fit: BoxFit.cover,
-                ),
-                Text('Description'),
-                Text('Loren Ipsum shit....')
-              ],
+            Text(data['name']),
+            Text(data['price']),
+            CachedNetworkImage(
+              placeholder: (context, string) => CircularProgressIndicator(),
+              imageUrl: data['imageurl'],
+              fit: BoxFit.cover,
             ),
+            Text('Description'),
+            Text('Loren Ipsum shit....')
           ],
         ),
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 30),
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            // Navigate to cart Checkout
+          },
           child: Container(
             alignment: Alignment.center,
             width: MediaQuery.of(context).size.width,
             height: 40,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[Text('Buy'), Icon(Icons.add_shopping_cart)],
+              children: <Widget>[Text('Purchase',style: TextStyle(color: Theme.of(context).accentColor),), Icon(Icons.add_shopping_cart,color: Theme.of(context).accentColor,)],
             ),
           ),
         ),

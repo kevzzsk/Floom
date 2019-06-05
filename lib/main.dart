@@ -65,7 +65,7 @@ class _MenuPageState extends State<MenuPage> {
     switch (selectedTab) {
       case 0:
         return new HomePage(callback: callback);
-      // case 1: return new CustomPage();
+      //case 1: return new CustomPage();
       // case 2: return new OrderPage();
       // case 3: return new AccountPage();
     }
