@@ -1,31 +1,54 @@
+import 'package:bloc/bloc.dart';
 import 'package:floom/bloc/cart_bloc.dart';
 import 'package:floom/home_page.dart';
+import 'package:floom/login/authentication_bloc/bloc.dart';
+import 'package:floom/login/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'route_gen.dart';
 import 'floom_cart.dart';
+import 'bloc_delegate.dart';
 
 void main() {
-  runApp(MyApp());
+  final User user = User();
+  BlocSupervisor.delegate = SimpleBlocDelegate();
+  runApp(BlocProvider(
+    bloc: AuthenticationBloc(user: user)..dispatch(AppStarted()),
+    child: MyApp(user: user),
+  ));
 }
 
 class MyApp extends StatelessWidget {
+  final User _user;
+
+  MyApp({Key key, @required User user})
+      : assert(user != null),
+        _user = user,
+        super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: "/",
+      home: MenuPage(user:_user),
       onGenerateRoute: RouteGenerator.generateRoute,
       theme: ThemeData(
-        primaryColor: Colors.white,
-        hintColor: Color.fromARGB(255, 250, 82, 32),
-        accentColor: Color.fromARGB(255, 250, 82, 32)),
+          primaryColor: Colors.white,
+          hintColor: Color.fromARGB(255, 250, 82, 32),
+          accentColor: Color.fromARGB(255, 250, 82, 32)),
     );
   }
 }
 
 class MenuPage extends StatefulWidget {
+  final User _user;
+
+  MenuPage({Key key, @required User user})
+      : assert(user != null),
+        _user = user,
+        super(key: key);
+
   @override
   _MenuPageState createState() => _MenuPageState();
 }
@@ -69,7 +92,8 @@ class _MenuPageState extends State<MenuPage> {
       case 0:
         return new HomePage(callback: callback);
       //case 1: return new CustomPage();
-      case 2: return new CartPage();
+      case 2:
+        return new CartPage();
       // case 3: return new AccountPage();
     }
     return Container();
@@ -206,36 +230,50 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(context),
-      body: isSearching
-          ? _buildList()
-          : _buildBody(selectedTab: _selectedIndex, callback: callback),
-      bottomNavigationBar: new BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            title: Text('Home'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_box),
-            title: Text('Custom'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            title: Text('Cart'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            title: Text('Account'),
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor:
-            Color.fromARGB(255, 250, 82, 32), // SELECTED ITEM COLOR
-        unselectedItemColor: Color.fromARGB(130, 250, 82, 32),
-        showUnselectedLabels: true,
-        onTap: _onItemTapped,
+    return BlocListener(
+        bloc: BlocProvider.of<AuthenticationBloc>(context),
+        listener: (BuildContext context, AuthenticationState state){
+          if (state is Uninitialized){
+            Navigator.pushNamed(context, '/splash');
+          }
+          if(state is Unauthenticated){
+            Navigator.pushNamedAndRemoveUntil(context, '/login',(_)=>false,arguments: widget._user);
+          }
+          if(state is Authenticated){
+            Navigator.popUntil(context, ModalRoute.withName('/'));
+          }
+        },
+      child: Scaffold(
+        appBar: _buildAppBar(context),
+        body: isSearching
+            ? _buildList()
+            : _buildBody(selectedTab: _selectedIndex, callback: callback),
+        bottomNavigationBar: new BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search),
+              title: Text('Home'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add_box),
+              title: Text('Custom'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart),
+              title: Text('Cart'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle),
+              title: Text('Account'),
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor:
+              Color.fromARGB(255, 250, 82, 32), // SELECTED ITEM COLOR
+          unselectedItemColor: Color.fromARGB(130, 250, 82, 32),
+          showUnselectedLabels: true,
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }

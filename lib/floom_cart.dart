@@ -32,6 +32,7 @@ class _CartPageState extends State<CartPage> {
                   return ScrollConfiguration(
                     behavior: MyBehavior(),
                     child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: itemList.length,
                       itemBuilder: (context, index) {
