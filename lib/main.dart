@@ -237,10 +237,10 @@ class _MenuPageState extends State<MenuPage> {
             Navigator.pushNamed(context, '/splash');
           }
           if(state is Unauthenticated){
-            Navigator.pushNamedAndRemoveUntil(context, '/login',(_)=>false,arguments: widget._user);
+            Navigator.pushNamedAndRemoveUntil(context, '/login',ModalRoute.withName('/'),arguments: widget._user);
           }
           if(state is Authenticated){
-            Navigator.popUntil(context, ModalRoute.withName('/'));
+            Navigator.pop(context);
           }
         },
       child: Scaffold(

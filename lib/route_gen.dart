@@ -11,7 +11,7 @@ class RouteGenerator{
 
     switch(settings.name){
       case '/':
-        return MaterialPageRoute(builder: (context)=> MenuPage());
+        return MaterialPageRoute(builder: (context)=> MenuPage(user:args));
       case '/item':
         return MaterialPageRoute(builder: (context)=> ItemPage(data:args));
       case '/login':

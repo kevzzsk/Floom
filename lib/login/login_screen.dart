@@ -17,7 +17,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login'),),
+      appBar: AppBar(title: Text('Login'),centerTitle: true,automaticallyImplyLeading: false,),
       body: BlocProvider<LoginBloc>(
         bloc: LoginBloc(user: _user),
         child: LoginForm(user: _user)
