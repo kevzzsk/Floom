@@ -1,8 +1,11 @@
+import 'package:floom/bloc/cart_bloc.dart';
 import 'package:floom/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'route_gen.dart';
+import 'floom_cart.dart';
 
 void main() {
   runApp(MyApp());
@@ -66,7 +69,7 @@ class _MenuPageState extends State<MenuPage> {
       case 0:
         return new HomePage(callback: callback);
       //case 1: return new CustomPage();
-      // case 2: return new OrderPage();
+      case 2: return new CartPage();
       // case 3: return new AccountPage();
     }
     return Container();
@@ -144,6 +147,7 @@ class _MenuPageState extends State<MenuPage> {
   Widget _buildAppBar(BuildContext context) {
     return new AppBar(
       title: this.appBarTitle,
+      centerTitle: true,
       actions: <Widget>[
         IconButton(
           icon: _actionIcon,
@@ -219,7 +223,7 @@ class _MenuPageState extends State<MenuPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
-            title: Text('Orders'),
+            title: Text('Cart'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),

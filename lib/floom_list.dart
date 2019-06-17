@@ -1,3 +1,4 @@
+import 'package:floom/model/Item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -29,13 +30,13 @@ class _FloomListState extends State<FloomList> {
                     child: CachedNetworkImage(
                   width: 130,
                   placeholder: (context, string) => CircularProgressIndicator(),
-                  imageUrl: metadata['imageurl'],
+                  imageUrl: metadata.imageurl,
                   fit: BoxFit.cover,
                 )),
-                new Text(metadata['name'],
+                new Text(metadata.name,
                     style: TextStyle(
                         fontFamily: 'Montserrat', fontWeight: FontWeight.w300)),
-                new Text("\$" + metadata['price'],
+                new Text("\$" + metadata.price.toString(),
                     style: TextStyle(
                         fontFamily: 'Montserrat', fontWeight: FontWeight.w300))
               ],
@@ -49,7 +50,7 @@ class _FloomListState extends State<FloomList> {
         scrollDirection: Axis.horizontal,
         itemCount: widget.data['items'].length,
         itemBuilder: (context, index) {
-          return _cardBuilder(widget.data['items'][index]);
+          return _cardBuilder(Item.fromJSON(widget.data['items'][index]));
         },
       ),
     );

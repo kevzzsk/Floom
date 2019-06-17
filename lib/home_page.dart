@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'dart:async' show Future;
 import 'package:flutter/services.dart' show rootBundle;
 
+
 class HomePage extends StatefulWidget {
   Function callback;
   HomePage({this.callback});
@@ -30,7 +31,7 @@ class _HomePageState extends State<HomePage> {
           if (snapshot.data != null) {
             // return item list to parent
             data = snapshot.data;
-
+            
             return new ListView.builder(
               itemCount: data['category'].length,
               itemBuilder: (BuildContext context, int index) {
