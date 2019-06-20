@@ -12,3 +12,9 @@ class AddItem extends CartEvent{
 }
 
 class GetItems extends CartEvent{}
+
+class DeleteItem extends CartEvent{
+  final Item delItem;
+
+  DeleteItem(this.delItem);
+}

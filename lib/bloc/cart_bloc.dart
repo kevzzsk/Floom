@@ -17,5 +17,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           await transaction.set(Firestore.instance.collection('shoppingcart').document(), event.item.toJson());
         });
       }
+      if(event is DeleteItem){
+        Firestore.instance.runTransaction((transaction)async{
+          await transaction.delete(Firestore.instance.collection('shoppingcart').document(event.delItem.docID));
+        });
+      }
   }
 }
