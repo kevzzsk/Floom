@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:floom/account/floom_account.dart';
 import 'package:floom/bloc/cart_bloc.dart';
 import 'package:floom/home_page.dart';
 import 'package:floom/login/authentication_bloc/bloc.dart';
@@ -94,7 +95,7 @@ class _MenuPageState extends State<MenuPage> {
       //case 1: return new CustomPage();
       case 2:
         return new CartPage();
-      // case 3: return new AccountPage();
+      case 3: return new AccountPage();
     }
     return Container();
   }
