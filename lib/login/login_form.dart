@@ -138,7 +138,6 @@ class _LoginFormState extends State<LoginForm> {
                     obscureText: true,
                     autovalidate: true,
                     autocorrect: false,
-                    onEditingComplete: ()=>Form.of(context).validate(),
                     validator: (_) {
                       return !state.isPasswordValid ? 'Invalid Password' : null;
                     },

@@ -5,6 +5,7 @@ import 'package:floom/model/Item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
 
 class CartPage extends StatefulWidget {
   final items;
@@ -17,38 +18,40 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   final cartBloc = CartBloc();
 
-  
+  double subTotal = 0.0;
 
   @override
   Widget build(BuildContext context) {
-
     _deleteItem(Item delItem) {
-    cartBloc.dispatch(DeleteItem(delItem));
-    Scaffold.of(context)
-      ..showSnackBar(SnackBar(
-        content: Text("Deleted \"${delItem.name}\""),
-        action: SnackBarAction(
-          label: 'UNDO',
-          onPressed: () => cartBloc.dispatch(AddItem(delItem)),
-        ),
-      ));
-  }
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: StreamBuilder(
-            stream: Firestore.instance.collection('shoppingcart').snapshots(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                if (snapshot.data != null) {
-                  // build shopping cart
-                  List<Item> itemList = new List();
-                  for (var i in snapshot.data.documents) {
-                    Item item = Item.fromJSON(i.data);
-                    item.docID = i.documentID;
-                    itemList.add(item);
-                  }
-                  return ScrollConfiguration(
+      cartBloc.dispatch(DeleteItem(delItem));
+      Scaffold.of(context)
+        ..showSnackBar(SnackBar(
+          content: Text("Deleted \"${delItem.name}\""),
+          action: SnackBarAction(
+            label: 'UNDO',
+            onPressed: () => cartBloc.dispatch(AddItem(delItem)),
+          ),
+        ));
+    }
+
+    return StreamBuilder(
+      stream: Firestore.instance.collection('shoppingcart').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data != null) {
+            // build shopping cart
+            List<Item> itemList = new List();
+            subTotal = 0.0;
+            for (var i in snapshot.data.documents) {
+              Item item = Item.fromJSON(i.data);
+              item.docID = i.documentID;
+              itemList.add(item);
+              subTotal += item.price;
+            }
+            return Column(
+              children: <Widget>[
+                Expanded(
+                  child: ScrollConfiguration(
                     behavior: MyBehavior(),
                     child: ListView.builder(
                       physics: BouncingScrollPhysics(),
@@ -130,52 +133,53 @@ class _CartPageState extends State<CartPage> {
                         );
                       },
                     ),
-                  );
-                } else {
-                  return Container();
-                }
-              } else {
-                return Container(
-                  child: Text("Shopping cart is empty!"),
-                );
-              }
-            },
-          ),
-        ),
-        Container(
-          child: Card(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Text('SubTotal'),
-                    Text(
-                      "\$199",
-                      style: TextStyle(
-                          color: Colors.deepOrangeAccent,
-                          fontWeight: FontWeight.w700),
-                    )
-                  ],
+                  ),
                 ),
-                Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RaisedButton(
-                      onPressed: () {},
-                      color: Colors.deepOrange,
-                      shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(10.0)),
-                      child: Text(
-                        "Check Out",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ))
+                Container(
+                  child: Card(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            Text('SubTotal'),
+                            Text(
+                              "${NumberFormat.simpleCurrency().format(subTotal)}",
+                              style: TextStyle(
+                                  color: Colors.deepOrangeAccent,
+                                  fontWeight: FontWeight.w700),
+                            )
+                          ],
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: RaisedButton(
+                              onPressed: () {},
+                              color: Colors.deepOrange,
+                              shape: new RoundedRectangleBorder(
+                                  borderRadius:
+                                      new BorderRadius.circular(10.0)),
+                              child: Text(
+                                "Check Out",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ))
+                      ],
+                    ),
+                  ),
+                )
               ],
-            ),
-          ),
-        )
-      ],
+            );
+          } else {
+            return Container();
+          }
+        } else {
+          return Container(
+            child: Text("Shopping cart is empty!"),
+          );
+        }
+      },
     );
   }
 }
