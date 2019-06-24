@@ -77,6 +77,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       await _user.signInWithCredentials(email, password);
       yield LoginState.success();
+      _user.email = email;
     } catch (_) {
       yield LoginState.failure();
     }

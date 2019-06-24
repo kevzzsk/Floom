@@ -1,3 +1,4 @@
+import 'package:floom/account/account_setting.dart';
 import 'package:floom/login/login_screen.dart';
 import 'package:floom/login/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,8 @@ class RouteGenerator{
         return MaterialPageRoute(builder: (context)=> LoginScreen(user: args));
       case '/splash':
         return MaterialPageRoute(builder: (context)=> SplashScreen());
+      case '/accountsetting':
+        return MaterialPageRoute(builder: (context)=> AccountSettings(user: args,));
       
       default: // display error route
         return _errorRoute();

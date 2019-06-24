@@ -107,7 +107,7 @@ class AccountPage extends StatelessWidget {
     );
   }
 
-  Widget _buildBot(){
+  Widget _buildBot(BuildContext context){
     return Column(
       children: <Widget>[
         Container(
@@ -115,6 +115,7 @@ class AccountPage extends StatelessWidget {
           child: InkWell(
             onTap: (){
               debugPrint("Account Setting Clicked");
+              Navigator.pushNamed(context, '/accountsetting',arguments: _user);
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
@@ -164,7 +165,7 @@ class AccountPage extends StatelessWidget {
           SizedBox(height: 20,),
           _buildMid(),
           SizedBox(height: 20,),
-          _buildBot(),
+          _buildBot(context),
         ],
       ),
     );
