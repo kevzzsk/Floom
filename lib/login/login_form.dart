@@ -7,8 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'authentication_bloc/bloc.dart';
 import 'login_bloc/bloc.dart';
 
-
-
 class LoginForm extends StatefulWidget {
   final User _user;
 
@@ -29,9 +27,10 @@ class _LoginFormState extends State<LoginForm> {
 
   User get _user => widget._user;
 
-  bool get isPopulated => _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+  bool get isPopulated =>
+      _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
 
-  bool isLoginButtonEnabled(LoginState state){
+  bool isLoginButtonEnabled(LoginState state) {
     return state.isFormValid && isPopulated && !state.isSubmitting;
   }
 
@@ -43,27 +42,24 @@ class _LoginFormState extends State<LoginForm> {
     _emailController.addListener(_onEmailChanged);
     _passwordController.addListener(_onPasswordChanged);
   }
-  
 
   @override
   Widget build(BuildContext context) {
     return BlocListener(
       bloc: _loginBloc,
-      listener: (context,state){
-        if (state.isFailure){
+      listener: (context, state) {
+        if (state.isFailure) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[Text('Login Failed'), Icon(Icons.error)],
-                ),
-                backgroundColor: Colors.red,
-              )
-            );
+            ..showSnackBar(SnackBar(
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[Text('Login Failed'), Icon(Icons.error)],
+              ),
+              backgroundColor: Colors.red,
+            ));
         }
-        if (state.isSubmitting){
+        if (state.isSubmitting) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -78,45 +74,73 @@ class _LoginFormState extends State<LoginForm> {
               ),
             );
         }
-        if (state.isSuccess){
+        if (state.isSuccess) {
           BlocProvider.of<AuthenticationBloc>(context).dispatch(LoggedIn());
         }
       },
       child: BlocBuilder(
         bloc: _loginBloc,
-        builder: (BuildContext context, LoginState state){
-          return Padding(
-            padding: EdgeInsets.all(20),
+        builder: (BuildContext context, LoginState state) {
+          return GestureDetector(
+            onTap: (){
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
             child: Form(
               child: ListView(
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 20),
-                    child: Icon(Icons.local_mall,size: 80,),
+                    child: Icon(
+                      Icons.local_mall,
+                      size: 80,
+                    ),
                   ),
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.email),
-                      labelText: 'Email'
-                    ),
+                      focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            borderSide: BorderSide(color: Colors.deepOrange)),
+                        labelStyle: TextStyle(color: Colors.deepOrange),
+                        icon: Icon(
+                          Icons.email,
+                          color: Colors.deepOrange,
+                        ),
+                        labelText: 'Email',
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            borderSide: BorderSide(color: Colors.deepOrange))),
                     autovalidate: true,
                     autocorrect: false,
-                    validator: (_){
-                      return !state.isEmailValid? 'Invalid Email':null;
+                    validator: (_) {
+                      return !state.isEmailValid ? 'Invalid Email' : null;
                     },
+                  ),
+                  SizedBox(
+                    height: 5,
                   ),
                   TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.vpn_key),
-                      labelText: 'Password'
-                    ),
+                      focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            borderSide: BorderSide(color: Colors.deepOrange)),
+                        labelStyle: TextStyle(color: Colors.deepOrange),
+                        icon: Icon(
+                          Icons.vpn_key,
+                          color: Colors.deepOrange,
+                        ),
+                        labelText: 'Password',
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            borderSide: BorderSide(color: Colors.deepOrange))),
                     obscureText: true,
                     autovalidate: true,
                     autocorrect: false,
-                    validator: (_){
-                      return !state.isPasswordValid? 'Invalid Password' :null;
+                    onEditingComplete: ()=>Form.of(context).validate(),
+                    validator: (_) {
+                      return !state.isPasswordValid ? 'Invalid Password' : null;
                     },
                   ),
                   Padding(
@@ -125,10 +149,11 @@ class _LoginFormState extends State<LoginForm> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         LoginButton(
-                          onPressed: isLoginButtonEnabled(state)? _onFormSubmitted: null
-                        ),
+                            onPressed: isLoginButtonEnabled(state)
+                                ? _onFormSubmitted
+                                : null),
                         GoogleLoginButton(),
-                        CreateAccountButton(user:_user)
+                        CreateAccountButton(user: _user)
                       ],
                     ),
                   )
@@ -149,22 +174,18 @@ class _LoginFormState extends State<LoginForm> {
     super.dispose();
   }
 
-  void _onEmailChanged(){
+  void _onEmailChanged() {
     _loginBloc.dispatch(EmailChanged(email: _emailController.text));
   }
 
-  void _onPasswordChanged(){
+  void _onPasswordChanged() {
     _loginBloc.dispatch(PasswordChanged(password: _passwordController.text));
   }
 
-  void _onFormSubmitted(){
-    _loginBloc.dispatch(
-      LoginWithCredentialsPressed(
-        email: _emailController.text,
-        password: _passwordController.text
-      )
-    );
+  void _onFormSubmitted() {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    _loginBloc.dispatch(LoginWithCredentialsPressed(
+        email: _emailController.text, password: _passwordController.text));
+        
   }
-
-
 }
