@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:floom/account/floom_account.dart';
-import 'package:floom/bloc/cart_bloc.dart';
 import 'package:floom/home_page.dart';
 import 'package:floom/login/authentication_bloc/bloc.dart';
 import 'package:floom/login/user.dart';
@@ -34,6 +33,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: MenuPage(user: _user),
+      debugShowCheckedModeBanner: false,
       onGenerateRoute: RouteGenerator.generateRoute,
       theme: ThemeData(
           primaryColor: Colors.white,
@@ -45,7 +45,6 @@ class MyApp extends StatelessWidget {
 
 class MenuPage extends StatefulWidget {
   final User _user;
-
   MenuPage({Key key, @required User user})
       : assert(user != null),
         _user = user,
@@ -89,10 +88,10 @@ class _MenuPageState extends State<MenuPage> {
     });
   }
 
-  Widget _buildBody({int selectedTab, callback}) {
+  Widget _buildBody({int selectedTab}) {
     switch (selectedTab) {
       case 0:
-        return new HomePage(callback: callback);
+        return new HomePage(callback: callback, updateTab: _updateTab);
       case 1:
         return new CartPage();
       case 2:
@@ -101,6 +100,14 @@ class _MenuPageState extends State<MenuPage> {
         );
     }
     return Container();
+  }
+
+  _updateTab(int index) {
+    if (index != null) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   callback(itemList2) {
@@ -135,8 +142,8 @@ class _MenuPageState extends State<MenuPage> {
           Item item = Item.fromJSON(_searchList[index]);
 
           return InkWell(
-            onTap: (){
-              Navigator.pushNamed(context, '/item',arguments:item );
+            onTap: () {
+              Navigator.pushNamed(context, '/item', arguments: item);
             },
             child: new Card(
                 shape: RoundedRectangleBorder(
@@ -261,7 +268,7 @@ class _MenuPageState extends State<MenuPage> {
         appBar: _buildAppBar(context),
         body: isSearching
             ? _buildList()
-            : _buildBody(selectedTab: _selectedIndex, callback: callback),
+            : _buildBody(selectedTab: _selectedIndex),
         bottomNavigationBar: new BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(

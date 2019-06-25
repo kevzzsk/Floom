@@ -9,8 +9,9 @@ import 'package:flutter/services.dart' show rootBundle;
 
 
 class HomePage extends StatefulWidget {
-  Function callback;
-  HomePage({this.callback});
+  final Function callback;
+  final Function updateTab;
+  HomePage({this.callback,this.updateTab});
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -51,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                      FloomList(data: data['category'][index]),
+                      FloomList(data: data['category'][index],updateTab: widget.updateTab,),
                       Divider()
                     ],
                   ),

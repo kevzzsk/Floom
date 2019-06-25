@@ -6,8 +6,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 class FloomList extends StatefulWidget {
   final data;
+  final Function updateTab;
 
-  FloomList({this.data});
+  FloomList({this.data,this.updateTab});
 
   @override
   _FloomListState createState() => _FloomListState();
@@ -18,8 +19,11 @@ class _FloomListState extends State<FloomList> {
   Widget build(BuildContext context) {
     Widget _cardBuilder(metadata) {
       return InkWell(
-        onTap: (){
-          Navigator.pushNamed(context, '/item',arguments: metadata);
+        onTap: ()async{
+          // index == null when back button is pressed
+          // index == 1 when shopping cart icon is pressed
+          final index = await Navigator.pushNamed(context, '/item',arguments: metadata);
+          widget.updateTab(index);
         },
         child: new Card(
             elevation: 5,
