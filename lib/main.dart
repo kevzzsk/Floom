@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'route_gen.dart';
 import 'floom_cart.dart';
 import 'bloc_delegate.dart';
@@ -135,7 +136,7 @@ class _MenuPageState extends State<MenuPage> {
       }
       return GridView.builder(
         gridDelegate:
-            new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 200/205),
         itemCount: _searchList.length,
         itemBuilder: (context, index) {
           // map JSON to item object
@@ -146,37 +147,42 @@ class _MenuPageState extends State<MenuPage> {
               Navigator.pushNamed(context, '/item', arguments: item);
             },
             child: new Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25),
-                        topRight: Radius.circular(25))),
                 elevation: 5,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Container(
-                      height: 145,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(25),
-                            topRight: Radius.circular(25)),
+                        height: 139,
+                        alignment: Alignment.center,
                         child: CachedNetworkImage(
                           placeholder: (context, string) =>
                               CircularProgressIndicator(),
                           imageUrl: item.imageurl,
                           fit: BoxFit.cover,
-                          repeat: ImageRepeat.repeatX,
-                        ),
+                        )),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 4, 4, 2),
+                        child: new Text(item.name,
+                            softWrap: true,
+                            maxLines: 2,
+                            overflow: TextOverflow.visible,
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w500)),
                       ),
                     ),
-                    new Text(item.name,
-                        style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w300)),
-                    new Text("\$" + item.price.toString(),
-                        style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w300))
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 4, 4),
+                      child: new Text(
+                          "${NumberFormat.simpleCurrency().format(item.price)}",
+                          style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 250, 82, 32))),
+                    )
                   ],
                 )),
           );

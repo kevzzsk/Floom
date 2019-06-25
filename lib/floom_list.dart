@@ -3,12 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intl/intl.dart';
 
 class FloomList extends StatefulWidget {
   final data;
   final Function updateTab;
 
-  FloomList({this.data,this.updateTab});
+  FloomList({this.data, this.updateTab});
 
   @override
   _FloomListState createState() => _FloomListState();
@@ -19,37 +20,60 @@ class _FloomListState extends State<FloomList> {
   Widget build(BuildContext context) {
     Widget _cardBuilder(metadata) {
       return InkWell(
-        onTap: ()async{
+        onTap: () async {
           // index == null when back button is pressed
           // index == 1 when shopping cart icon is pressed
-          final index = await Navigator.pushNamed(context, '/item',arguments: metadata);
+          final index =
+              await Navigator.pushNamed(context, '/item', arguments: metadata);
           widget.updateTab(index);
         },
-        child: new Card(
-            elevation: 5,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Expanded(
-                    child: CachedNetworkImage(
-                  width: 130,
-                  placeholder: (context, string) => CircularProgressIndicator(),
-                  imageUrl: metadata.imageurl,
-                  fit: BoxFit.cover,
-                )),
-                new Text(metadata.name,
-                    style: TextStyle(
-                        fontFamily: 'Montserrat', fontWeight: FontWeight.w300)),
-                new Text("\$" + metadata.price.toString(),
-                    style: TextStyle(
-                        fontFamily: 'Montserrat', fontWeight: FontWeight.w300))
-              ],
-            )),
+        child: Container(
+          width: 200,
+          child: new Card(
+              elevation: 5,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Container(
+                      height: 139,
+                      alignment: Alignment.center,
+                      child: CachedNetworkImage(
+                        placeholder: (context, string) =>
+                            CircularProgressIndicator(),
+                        imageUrl: metadata.imageurl,
+                        fit: BoxFit.cover,
+                      )),
+                  Expanded(
+                                      child: Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 4, 4, 2),
+                      child: new Text(metadata.name,
+                          softWrap: true,
+                          maxLines: 2,
+                          overflow: TextOverflow.visible,
+                          style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w500)),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 4, 4),
+                    child: new Text(
+                        "${NumberFormat.simpleCurrency().format(metadata.price)}",
+                        style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 16,
+                            color: Color.fromARGB(255, 250, 82, 32))),
+                  )
+                ],
+              )),
+        ),
       );
     }
 
     return new Container(
-      height: 200,
+      height: 210,
       child: new ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: widget.data['items'].length,
