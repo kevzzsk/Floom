@@ -12,6 +12,22 @@ final User _user;
       : _user = user,
         super(key: key);
 
+  
+  Widget _getUsername(){
+    return FutureBuilder(
+      future: _user.getUser(),
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        if (snapshot.hasData){
+          if(snapshot.data != null){
+            return Text(snapshot.data);
+          }
+        }
+        else return Text("Guest");
+      },
+
+    );
+  }
+
   Widget _buildMid() {
     return Column(
       children: <Widget>[
@@ -31,9 +47,7 @@ final User _user;
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
-                  Text(_user.isSignedIn() != null
-                      ? _user.email
-                      : "Guest")
+                  _getUsername()
                 ],
               ),
             ),
@@ -67,6 +81,7 @@ final User _user;
       ],
     );
   }
+
 
   Widget _buildBot() {
     return Column(

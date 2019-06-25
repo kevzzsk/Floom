@@ -4,6 +4,7 @@ import 'package:floom/bloc/cart_bloc.dart';
 import 'package:floom/home_page.dart';
 import 'package:floom/login/authentication_bloc/bloc.dart';
 import 'package:floom/login/user.dart';
+import 'package:floom/model/Item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MenuPage(user:_user),
+      home: MenuPage(user: _user),
       onGenerateRoute: RouteGenerator.generateRoute,
       theme: ThemeData(
           primaryColor: Colors.white,
@@ -94,7 +95,10 @@ class _MenuPageState extends State<MenuPage> {
         return new HomePage(callback: callback);
       case 1:
         return new CartPage();
-      case 2: return new AccountPage(user: widget._user,);
+      case 2:
+        return new AccountPage(
+          user: widget._user,
+        );
     }
     return Container();
   }
@@ -127,40 +131,48 @@ class _MenuPageState extends State<MenuPage> {
             new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemCount: _searchList.length,
         itemBuilder: (context, index) {
-          return new Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(25),
-                      topRight: Radius.circular(25))),
-              elevation: 5,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Container(
-                    height: 145,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          topRight: Radius.circular(25)),
-                      child: CachedNetworkImage(
-                        placeholder: (context, string) =>
-                            CircularProgressIndicator(),
-                        imageUrl: _searchList[index]['imageurl'],
-                        fit: BoxFit.cover,
-                        repeat: ImageRepeat.repeatX,
+          // map JSON to item object
+          Item item = Item.fromJSON(_searchList[index]);
+
+          return InkWell(
+            onTap: (){
+              Navigator.pushNamed(context, '/item',arguments:item );
+            },
+            child: new Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25),
+                        topRight: Radius.circular(25))),
+                elevation: 5,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      height: 145,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(25),
+                            topRight: Radius.circular(25)),
+                        child: CachedNetworkImage(
+                          placeholder: (context, string) =>
+                              CircularProgressIndicator(),
+                          imageUrl: item.imageurl,
+                          fit: BoxFit.cover,
+                          repeat: ImageRepeat.repeatX,
+                        ),
                       ),
                     ),
-                  ),
-                  new Text(_searchList[index]['name'],
-                      style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.w300)),
-                  new Text("\$" + _searchList[index]['price'],
-                      style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.w300))
-                ],
-              ));
+                    new Text(item.name,
+                        style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w300)),
+                    new Text("\$" + item.price.toString(),
+                        style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w300))
+                  ],
+                )),
+          );
         },
       );
     } else {
@@ -231,18 +243,20 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return BlocListener(
-        bloc: BlocProvider.of<AuthenticationBloc>(context),
-        listener: (BuildContext context, AuthenticationState state){
-          if (state is Uninitialized){
-            Navigator.pushNamed(context, '/splash');
-          }
-          if(state is Unauthenticated){
-            Navigator.pushNamedAndRemoveUntil(context, '/login',ModalRoute.withName('/'),arguments: widget._user);
-          }
-          if(state is Authenticated){
-            Navigator.pop(context);
-          }
-        },
+      bloc: BlocProvider.of<AuthenticationBloc>(context),
+      listener: (BuildContext context, AuthenticationState state) {
+        if (state is Uninitialized) {
+          Navigator.pushNamed(context, '/splash');
+        }
+        if (state is Unauthenticated) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/login', ModalRoute.withName('/'),
+              arguments: widget._user);
+        }
+        if (state is Authenticated) {
+          Navigator.pop(context);
+        }
+      },
       child: Scaffold(
         appBar: _buildAppBar(context),
         body: isSearching
