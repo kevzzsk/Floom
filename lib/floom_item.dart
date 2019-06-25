@@ -5,9 +5,32 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ItemPage extends StatelessWidget {
+class ItemPage extends StatefulWidget {
   final data;
   ItemPage({this.data});
+
+  @override
+  _ItemPageState createState() => _ItemPageState();
+}
+
+class _ItemPageState extends State<ItemPage> with TickerProviderStateMixin {
+  AnimationController scoreSizeAnimationController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    scoreSizeAnimationController = new AnimationController(
+        vsync: this, duration: new Duration(milliseconds: 200));
+    scoreSizeAnimationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        scoreSizeAnimationController.reverse();
+      }
+    });
+    scoreSizeAnimationController.addListener(() {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,27 +39,38 @@ class ItemPage extends StatelessWidget {
       cartBloc.dispatch(AddItem(item));
     }
 
-    Widget _buildItemCounter(){
+    Widget _buildItemCounter() {
       // use Stream builder to listen to item count changes
       return StreamBuilder(
         stream: Firestore.instance.collection('shoppingcart').snapshots(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if ( snapshot.hasData){
-            if(snapshot.data!= null){
+          if (snapshot.hasData) {
+            if (snapshot.data != null) {
               int counter = snapshot.data.documents.length;
-              return counter !=0? Positioned(
-                right: 8,
-                top: 8,
-                child: new Container(
-                  padding: EdgeInsets.all(1),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(10)
-                  ),
-                  constraints: BoxConstraints(minHeight: 14,minWidth: 14),
-                  child: Text('$counter',style: TextStyle(color: Colors.white,fontSize: 10),textAlign: TextAlign.center,),
-                ),
-              ):Container();
+              return counter != 0
+                  ? Positioned(
+                      right: 8,
+                      top: 8,
+                      child: new Container(
+                        padding: EdgeInsets.all(1),
+                        height: 12 + scoreSizeAnimationController.value * 10,
+                        width: 12 + scoreSizeAnimationController.value * 10,
+                        decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(10)),
+                        constraints:
+                            BoxConstraints(minHeight: 14, minWidth: 14),
+                        child: Text(
+                          '$counter',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize:
+                                  10 + scoreSizeAnimationController.value * 5),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  : Container();
             }
           }
           return Container();
@@ -53,9 +87,9 @@ class ItemPage extends StatelessWidget {
           Stack(
             children: <Widget>[
               IconButton(
-                onPressed: (){
+                onPressed: () {
                   // TODO:
-                  Navigator.pop(context,1);
+                  Navigator.pop(context, 1);
                 },
                 icon: Icon(Icons.shopping_cart),
               ),
@@ -79,7 +113,7 @@ class ItemPage extends StatelessWidget {
               height: 400,
               child: CachedNetworkImage(
                 placeholder: (context, string) => CircularProgressIndicator(),
-                imageUrl: data.imageurl,
+                imageUrl: widget.data.imageurl,
                 fit: BoxFit.fitHeight,
               ),
             ),
@@ -90,10 +124,10 @@ class ItemPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    data.name,
+                    widget.data.name,
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
                   ),
-                  Text("\$" + data.price.toString()),
+                  Text("\$" + widget.data.price.toString()),
                   SizedBox(
                     height: 10,
                   ),
@@ -108,7 +142,10 @@ class ItemPage extends StatelessWidget {
         padding: const EdgeInsets.only(),
         child: InkWell(
           onTap: () {
-            _addItemToCart(data);
+            _addItemToCart(widget.data);
+            Future.delayed(Duration(milliseconds: 300), () {
+              scoreSizeAnimationController.forward(from: 0.0);
+            });
           },
           child: Container(
             alignment: Alignment.center,
@@ -117,14 +154,14 @@ class ItemPage extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                Icon(
+                  Icons.add_shopping_cart,
+                  color: Theme.of(context).accentColor,
+                ),
                 Text(
                   'Purchase',
                   style: TextStyle(color: Theme.of(context).accentColor),
                 ),
-                Icon(
-                  Icons.add_shopping_cart,
-                  color: Theme.of(context).accentColor,
-                )
               ],
             ),
           ),
