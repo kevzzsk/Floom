@@ -7,3 +7,9 @@ Used BLoC as a state management framework. Backend is supported by serverless fi
 
 ## Tested
 - Pixel 2 SDK 28
+
+
+## Features Included:
+- Search Bar
+- Add/Delete on shopping cart (purchase)
+- Login and authentication with Firebase Auth
