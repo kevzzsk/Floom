@@ -69,68 +69,73 @@ class _CartPageState extends State<CartPage> {
                             _deleteItem(itemList[index]);
                           },
                           child: InkWell(
-                            onTap: (){
-                              Navigator.pushNamed(context, '/item',arguments: itemList[index]);
+                            onTap: () {
+                              Navigator.pushNamed(context, '/item',
+                                  arguments: itemList[index]);
                             },
-                            child: Card(
-                              child: Row(
-                                children: <Widget>[
-                                  Container(
-                                    height: 100,
-                                    width: 100,
-                                    child: CachedNetworkImage(
-                                      placeholder: (context, string) =>
-                                          CircularProgressIndicator(),
-                                      imageUrl: itemList[index].imageurl,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            itemList[index].name,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 16),
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Text(
-                                            "${NumberFormat.simpleCurrency().format(itemList[index].price)}",
-                                            style: TextStyle(
-                                                color: Colors.deepOrangeAccent,
-                                                fontWeight: FontWeight.w700),
-                                          )
-                                        ],
+                            child: Hero(
+                              tag: itemList[index].name,
+                              child: Card(
+                                child: Row(
+                                  children: <Widget>[
+                                    Container(
+                                      height: 100,
+                                      width: 100,
+                                      child: CachedNetworkImage(
+                                        placeholder: (context, string) =>
+                                            CircularProgressIndicator(),
+                                        imageUrl: itemList[index].imageurl,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      IconButton(
-                                        icon: Icon(Icons.arrow_drop_up),
-                                        onPressed: () {},
-                                      ),
-                                      Container(
-                                        child: Text(
-                                          "1",
-                                          style: TextStyle(fontSize: 15),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              itemList[index].name,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 16),
+                                            ),
+                                            SizedBox(
+                                              height: 15,
+                                            ),
+                                            Text(
+                                              "${NumberFormat.simpleCurrency().format(itemList[index].price)}",
+                                              style: TextStyle(
+                                                  color:
+                                                      Colors.deepOrangeAccent,
+                                                  fontWeight: FontWeight.w700),
+                                            )
+                                          ],
                                         ),
                                       ),
-                                      IconButton(
-                                        icon: Icon(Icons.arrow_drop_down),
-                                        onPressed: () {},
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                    ),
+                                    Column(
+                                      children: <Widget>[
+                                        IconButton(
+                                          icon: Icon(Icons.arrow_drop_up),
+                                          onPressed: () {},
+                                        ),
+                                        Container(
+                                          child: Text(
+                                            "1",
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: Icon(Icons.arrow_drop_down),
+                                          onPressed: () {},
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class ItemPage extends StatefulWidget {
   final data;
@@ -88,7 +89,6 @@ class _ItemPageState extends State<ItemPage> with TickerProviderStateMixin {
             children: <Widget>[
               IconButton(
                 onPressed: () {
-                  // TODO:
                   Navigator.pop(context, 1);
                 },
                 icon: Icon(Icons.shopping_cart),
@@ -105,37 +105,50 @@ class _ItemPageState extends State<ItemPage> with TickerProviderStateMixin {
               color: Color.fromARGB(255, 250, 82, 32)),
         ),
       ),
-      body: Container(
-        child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            Container(
-              height: 400,
-              child: CachedNetworkImage(
-                placeholder: (context, string) => CircularProgressIndicator(),
-                imageUrl: widget.data.imageurl,
-                fit: BoxFit.fitHeight,
+      body: Hero(
+        tag: widget.data.name,
+        transitionOnUserGestures: true,
+        child: Container(
+          child: ListView(
+            shrinkWrap: true,
+            children: <Widget>[
+              Container(
+                height: 400,
+                child: CachedNetworkImage(
+                  placeholder: (context, string) => CircularProgressIndicator(),
+                  imageUrl: widget.data.imageurl,
+                  fit: BoxFit.fitHeight,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10, left: 10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    widget.data.name,
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-                  ),
-                  Text("\$" + widget.data.price.toString()),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text('Loren Ipsum blahlbhlvlahblahvlagblahlbahlbah....')
-                ],
+              Padding(
+                padding: const EdgeInsets.only(top: 10, left: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      widget.data.name,
+                      style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                        "${NumberFormat.simpleCurrency().format(widget.data.price)}",
+                        style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 16,
+                            color: Color.fromARGB(255, 250, 82, 32))),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text('Loren Ipsum blahlbhlvlahblahvlagblahlbahlbah....')
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: Padding(

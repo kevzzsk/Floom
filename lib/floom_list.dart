@@ -27,47 +27,50 @@ class _FloomListState extends State<FloomList> {
               await Navigator.pushNamed(context, '/item', arguments: metadata);
           widget.updateTab(index);
         },
-        child: Container(
-          width: 200,
-          child: new Card(
-              elevation: 5,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Container(
-                      height: 139,
-                      alignment: Alignment.center,
-                      child: CachedNetworkImage(
-                        placeholder: (context, string) =>
-                            CircularProgressIndicator(),
-                        imageUrl: metadata.imageurl,
-                        fit: BoxFit.cover,
-                      )),
-                  Expanded(
-                                      child: Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 4, 4, 2),
-                      child: new Text(metadata.name,
-                          softWrap: true,
-                          maxLines: 2,
-                          overflow: TextOverflow.visible,
+        child: Hero(
+          tag: metadata.name,
+          child: Container(
+            width: 200,
+            child: new Card(
+                elevation: 5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                        height: 139,
+                        alignment: Alignment.center,
+                        child: CachedNetworkImage(
+                          placeholder: (context, string) =>
+                              CircularProgressIndicator(),
+                          imageUrl: metadata.imageurl,
+                          fit: BoxFit.cover,
+                        )),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 4, 4, 2),
+                        child: new Text(metadata.name,
+                            softWrap: true,
+                            maxLines: 2,
+                            overflow: TextOverflow.visible,
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w500)),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 4, 4),
+                      child: new Text(
+                          "${NumberFormat.simpleCurrency().format(metadata.price)}",
                           style: TextStyle(
                               fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w500)),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 0, 4, 4),
-                    child: new Text(
-                        "${NumberFormat.simpleCurrency().format(metadata.price)}",
-                        style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 16,
-                            color: Color.fromARGB(255, 250, 82, 32))),
-                  )
-                ],
-              )),
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 250, 82, 32))),
+                    )
+                  ],
+                )),
+          ),
         ),
       );
     }

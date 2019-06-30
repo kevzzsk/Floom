@@ -135,8 +135,8 @@ class _MenuPageState extends State<MenuPage> {
         }
       }
       return GridView.builder(
-        gridDelegate:
-            new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 200/205),
+        gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, childAspectRatio: 200 / 205),
         itemCount: _searchList.length,
         itemBuilder: (context, index) {
           // map JSON to item object
@@ -146,45 +146,48 @@ class _MenuPageState extends State<MenuPage> {
             onTap: () {
               Navigator.pushNamed(context, '/item', arguments: item);
             },
-            child: new Card(
-                elevation: 5,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Container(
-                        height: 139,
-                        alignment: Alignment.center,
-                        child: CachedNetworkImage(
-                          placeholder: (context, string) =>
-                              CircularProgressIndicator(),
-                          imageUrl: item.imageurl,
-                          fit: BoxFit.cover,
-                        )),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(8, 4, 4, 2),
-                        child: new Text(item.name,
-                            softWrap: true,
-                            maxLines: 2,
-                            overflow: TextOverflow.visible,
+            child: Hero(
+              tag: item.name,
+              child: new Card(
+                  elevation: 5,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Container(
+                          height: 139,
+                          alignment: Alignment.center,
+                          child: CachedNetworkImage(
+                            placeholder: (context, string) =>
+                                CircularProgressIndicator(),
+                            imageUrl: item.imageurl,
+                            fit: BoxFit.cover,
+                          )),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(8, 4, 4, 2),
+                          child: new Text(item.name,
+                              softWrap: true,
+                              maxLines: 2,
+                              overflow: TextOverflow.visible,
+                              style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w500)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 0, 4, 4),
+                        child: new Text(
+                            "${NumberFormat.simpleCurrency().format(item.price)}",
                             style: TextStyle(
                                 fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w500)),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 0, 4, 4),
-                      child: new Text(
-                          "${NumberFormat.simpleCurrency().format(item.price)}",
-                          style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 250, 82, 32))),
-                    )
-                  ],
-                )),
+                                fontSize: 16,
+                                color: Color.fromARGB(255, 250, 82, 32))),
+                      )
+                    ],
+                  )),
+            ),
           );
         },
       );
