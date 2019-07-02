@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>897643263693-5bh3r0i94142g8srs3aqia90s9h75j8e.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.897643263693-5bh3r0i94142g8srs3aqia90s9h75j8e</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA8lOYn8NqECWv44nHnz-XVRCH2ySvhqrg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>897643263693</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.floom</string>
+	<key>PROJECT_ID</key>
+	<string>floom-16623</string>
+	<key>STORAGE_BUCKET</key>
+	<string>floom-16623.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:897643263693:ios:597b2114ff505b3b</string>
+	<key>DATABASE_URL</key>
+	<string>https://floom-16623.firebaseio.com</string>
+</dict>
+</plist>

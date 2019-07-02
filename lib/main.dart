@@ -136,7 +136,7 @@ class _MenuPageState extends State<MenuPage> {
       }
       return GridView.builder(
         gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, childAspectRatio: 200 / 205),
+            crossAxisCount: 2, childAspectRatio: 200 / 225),
         itemCount: _searchList.length,
         itemBuilder: (context, index) {
           // map JSON to item object
