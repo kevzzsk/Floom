@@ -44,8 +44,9 @@ class _FloomListState extends State<FloomList> {
                         child: CachedNetworkImage(
                           placeholder: (context, string) =>
                               CircularProgressIndicator(),
-                          imageUrl: metadata.imageurl,
-                          fit: BoxFit.cover,
+                          imageUrl: metadata.image,
+                          fit: BoxFit.fitWidth,
+                          width: 200,
                         )),
                     Expanded(
                       child: Padding(

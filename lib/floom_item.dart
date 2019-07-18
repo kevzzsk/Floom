@@ -116,7 +116,7 @@ class _ItemPageState extends State<ItemPage> with TickerProviderStateMixin {
                 height: 400,
                 child: CachedNetworkImage(
                   placeholder: (context, string) => CircularProgressIndicator(),
-                  imageUrl: widget.data.imageurl,
+                  imageUrl: widget.data.image,
                   fit: BoxFit.fitHeight,
                 ),
               ),
@@ -143,7 +143,7 @@ class _ItemPageState extends State<ItemPage> with TickerProviderStateMixin {
                     SizedBox(
                       height: 10,
                     ),
-                    Text('Loren Ipsum blahlbhlvlahblahvlagblahlbahlbah....')
+                    Text(widget.data.description)
                   ],
                 ),
               ),

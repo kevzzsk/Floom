@@ -1,7 +1,7 @@
 buildscript {
     repositories {
-        google()
         jcenter()
+        google()
     }
 
     dependencies {
@@ -12,8 +12,8 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
         jcenter()
+        google()
     }
 }
 
@@ -28,3 +28,4 @@ subprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+

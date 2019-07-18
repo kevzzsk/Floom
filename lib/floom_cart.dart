@@ -84,7 +84,7 @@ class _CartPageState extends State<CartPage> {
                                       child: CachedNetworkImage(
                                         placeholder: (context, string) =>
                                             CircularProgressIndicator(),
-                                        imageUrl: itemList[index].imageurl,
+                                        imageUrl: itemList[index].image,
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -185,7 +185,7 @@ class _CartPageState extends State<CartPage> {
           }
         } else {
           return Container(
-            child: Text("Shopping cart is empty!"),
+            child: Center(child: CircularProgressIndicator(),),
           );
         }
       },

@@ -6,12 +6,12 @@ import 'package:flutter/widgets.dart';
 import 'dart:convert';
 import 'dart:async' show Future;
 import 'package:flutter/services.dart' show rootBundle;
-
+import 'package:firebase_database/firebase_database.dart';
 
 class HomePage extends StatefulWidget {
   final Function callback;
   final Function updateTab;
-  HomePage({this.callback,this.updateTab});
+  HomePage({this.callback, this.updateTab});
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -32,9 +32,8 @@ class _HomePageState extends State<HomePage> {
           if (snapshot.data != null) {
             // return item list to parent
             data = snapshot.data;
-            
             return new ListView.builder(
-              itemCount: data['category'].length,
+              itemCount: data['categories'].length,
               itemBuilder: (BuildContext context, int index) {
                 return new Container(
                   color: Colors.white,
@@ -44,15 +43,18 @@ class _HomePageState extends State<HomePage> {
                       Padding(
                         padding:
                             EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        child: Text( 
-                          data['category'][index]['name'],
+                        child: Text(
+                          data['categories'][index]['catname'],
                           style: TextStyle(
                               fontFamily: 'Montserrat',
                               fontSize: 22,
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                      FloomList(data: data['category'][index],updateTab: widget.updateTab,),
+                      FloomList(
+                        data: data['categories'][index],
+                        updateTab: widget.updateTab,
+                      ),
                       Divider()
                     ],
                   ),
@@ -71,8 +73,17 @@ class _HomePageState extends State<HomePage> {
 }
 
 Future loadData(widget) async {
-  String jsonString = await rootBundle.loadString('assets/data.json');
+  var jsonResponse;
+  var db = FirebaseDatabase.instance.reference().child('products');
+  // listen once for the value
+  await db.once().then((DataSnapshot snapshot) {
+    jsonResponse = snapshot.value;
+    widget.callback(jsonResponse);
+  });
+  
+  return jsonResponse;
+/*   String jsonString = await rootBundle.loadString('assets/data.json');
   final jsonResponse = json.decode(jsonString);
   widget.callback(jsonResponse);
-  return jsonResponse;
+  return jsonResponse; */
 }

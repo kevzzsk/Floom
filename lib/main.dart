@@ -113,7 +113,7 @@ class _MenuPageState extends State<MenuPage> {
 
   callback(itemList2) {
     setState(() {
-      itemList = itemList2['category'];
+      itemList = itemList2['categories'];
     });
   }
 
@@ -161,7 +161,7 @@ class _MenuPageState extends State<MenuPage> {
                           child: CachedNetworkImage(
                             placeholder: (context, string) =>
                                 CircularProgressIndicator(),
-                            imageUrl: item.imageurl,
+                            imageUrl: item.image,
                             fit: BoxFit.cover,
                           )),
                       Expanded(

@@ -21,6 +21,9 @@ final User _user;
           if(snapshot.data != null){
             return Text(snapshot.data);
           }
+          else {
+            return Text("Guest");
+          }
         }
         else return Text("Guest");
       },
