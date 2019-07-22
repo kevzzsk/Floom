@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:floom/bloc/bloc.dart';
 import 'package:floom/model/Item.dart';
+import 'package:floom/model/cart_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
@@ -22,14 +23,14 @@ class _CartPageState extends State<CartPage> {
 
   @override
   Widget build(BuildContext context) {
-    _deleteItem(Item delItem) {
+    _deleteItem(CartItem delItem) {
       cartBloc.dispatch(DeleteItem(delItem));
       Scaffold.of(context)
         ..showSnackBar(SnackBar(
-          content: Text("Deleted \"${delItem.name}\""),
+          content: Text("Deleted \"${delItem.item.name}\""),
           action: SnackBarAction(
             label: 'UNDO',
-            onPressed: () => cartBloc.dispatch(AddItem(delItem)),
+            onPressed: () => cartBloc.dispatch(AddItem(delItem.item,delItem.qty)),
           ),
         ));
     }
@@ -40,13 +41,13 @@ class _CartPageState extends State<CartPage> {
         if (snapshot.hasData) {
           if (snapshot.data != null) {
             // build shopping cart
-            List<Item> itemList = new List();
+            List<CartItem> itemList = new List();
             subTotal = 0.0;
             for (var i in snapshot.data.documents) {
-              Item item = Item.fromJSON(i.data);
-              item.docID = i.documentID;
-              itemList.add(item);
-              subTotal += item.price;
+              CartItem cartItem = CartItem.fromJSON(i.data);
+              cartItem.docID = i.documentID;
+              itemList.add(cartItem);
+              subTotal += cartItem.item.price;
             }
             return Column(
               children: <Widget>[
@@ -58,6 +59,7 @@ class _CartPageState extends State<CartPage> {
                       shrinkWrap: true,
                       itemCount: itemList.length,
                       itemBuilder: (context, index) {
+                        Item item = itemList[index].item;
                         return Dismissible(
                           key: Key(itemList[index].docID),
                           background: Container(
@@ -71,10 +73,10 @@ class _CartPageState extends State<CartPage> {
                           child: InkWell(
                             onTap: () {
                               Navigator.pushNamed(context, '/item',
-                                  arguments: itemList[index]);
+                                  arguments: item);
                             },
                             child: Hero(
-                              tag: itemList[index].name,
+                              tag: item.name,
                               child: Card(
                                 child: Row(
                                   children: <Widget>[
@@ -84,7 +86,7 @@ class _CartPageState extends State<CartPage> {
                                       child: CachedNetworkImage(
                                         placeholder: (context, string) =>
                                             CircularProgressIndicator(),
-                                        imageUrl: itemList[index].image,
+                                        imageUrl: item.image,
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -97,7 +99,7 @@ class _CartPageState extends State<CartPage> {
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
-                                              itemList[index].name,
+                                              item.name,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 16),
@@ -106,7 +108,7 @@ class _CartPageState extends State<CartPage> {
                                               height: 15,
                                             ),
                                             Text(
-                                              "${NumberFormat.simpleCurrency().format(itemList[index].price)}",
+                                              "${NumberFormat.simpleCurrency().format(item.price)}",
                                               style: TextStyle(
                                                   color:
                                                       Colors.deepOrangeAccent,
@@ -124,7 +126,7 @@ class _CartPageState extends State<CartPage> {
                                         ),
                                         Container(
                                           child: Text(
-                                            "1",
+                                            itemList[index].qty.toString(),
                                             style: TextStyle(fontSize: 15),
                                           ),
                                         ),

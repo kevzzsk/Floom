@@ -14,9 +14,8 @@ class Item {
   final bool show_free_shipping;
   final int shopID;
   final int catID;
-  String docID;
 
-  Item({this.description, this.discount, this.is_official_shop, this.itemRating, this.liked, this.likedCount, this.show_free_shipping, this.shopID, this.catID, this.name, this.itemID, this.price, this.image,this.docID});
+  Item({this.description, this.discount, this.is_official_shop, this.itemRating, this.liked, this.likedCount, this.show_free_shipping, this.shopID, this.catID, this.name, this.itemID, this.price, this.image});
   
   factory Item.fromJSON(Map<dynamic,dynamic> parsedJson){
     return Item(

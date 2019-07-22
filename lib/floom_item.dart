@@ -35,9 +35,9 @@ class _ItemPageState extends State<ItemPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    _addItemToCart(item) {
+    _addItemToCart(item,qty) {
       final cartBloc = CartBloc();
-      cartBloc.dispatch(AddItem(item));
+      cartBloc.dispatch(AddItem(item,qty));
     }
 
     Widget _buildItemCounter() {
@@ -155,7 +155,7 @@ class _ItemPageState extends State<ItemPage> with TickerProviderStateMixin {
         padding: const EdgeInsets.only(),
         child: InkWell(
           onTap: () {
-            _addItemToCart(widget.data);
+            _addItemToCart(widget.data,1);
             Future.delayed(Duration(milliseconds: 300), () {
               scoreSizeAnimationController.forward(from: 0.0);
             });
