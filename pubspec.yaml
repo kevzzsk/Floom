@@ -20,7 +20,7 @@ dependencies:
   cached_network_image: ^0.8.0
   flutter:
     sdk: flutter
-  flutter_bloc: ^0.15.1
+  flutter_bloc: ^0.17.0
   equatable: ^0.2.6
   cloud_firestore: ^0.12.7
   firebase_database: ^3.0.4

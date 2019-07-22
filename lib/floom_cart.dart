@@ -47,7 +47,7 @@ class _CartPageState extends State<CartPage> {
               CartItem cartItem = CartItem.fromJSON(i.data);
               cartItem.docID = i.documentID;
               itemList.add(cartItem);
-              subTotal += cartItem.item.price;
+              subTotal += cartItem.item.price * cartItem.qty;
             }
             return Column(
               children: <Widget>[
@@ -122,7 +122,10 @@ class _CartPageState extends State<CartPage> {
                                       children: <Widget>[
                                         IconButton(
                                           icon: Icon(Icons.arrow_drop_up),
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            // dispatch Additem
+                                            cartBloc.dispatch(AddItem(item,1));
+                                          },
                                         ),
                                         Container(
                                           child: Text(
@@ -132,7 +135,15 @@ class _CartPageState extends State<CartPage> {
                                         ),
                                         IconButton(
                                           icon: Icon(Icons.arrow_drop_down),
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            // dispatch Additem -1
+                                            if(itemList[index].qty>1){
+                                              cartBloc.dispatch(AddItem(item,-1));
+                                            }
+                                            else{
+                                              print("Item cannot decrease in qty!");
+                                            }
+                                          },
                                         ),
                                       ],
                                     ),

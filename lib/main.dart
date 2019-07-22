@@ -17,7 +17,7 @@ void main() {
   final User user = User();
   BlocSupervisor.delegate = SimpleBlocDelegate();
   runApp(BlocProvider(
-    bloc: AuthenticationBloc(user: user)..dispatch(AppStarted()),
+    builder:(BuildContext context) => AuthenticationBloc(user: user)..dispatch(AppStarted()),
     child: MyApp(user: user),
   ));
 }
@@ -261,6 +261,7 @@ class _MenuPageState extends State<MenuPage> {
     return BlocListener(
       bloc: BlocProvider.of<AuthenticationBloc>(context),
       listener: (BuildContext context, AuthenticationState state) {
+        print("current state is $state");
         if (state is Uninitialized) {
           Navigator.pushNamed(context, '/splash');
         }
