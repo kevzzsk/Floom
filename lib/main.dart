@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:floom/account/floom_account.dart';
 import 'package:floom/home_page.dart';
@@ -17,7 +19,8 @@ void main() {
   final User user = User();
   BlocSupervisor.delegate = SimpleBlocDelegate();
   runApp(BlocProvider(
-    builder:(BuildContext context) => AuthenticationBloc(user: user)..dispatch(AppStarted()),
+    builder: (BuildContext context) =>
+        AuthenticationBloc(user: user)..dispatch(AppStarted()),
     child: MyApp(user: user),
   ));
 }
@@ -72,8 +75,16 @@ class _MenuPageState extends State<MenuPage> {
         fontWeight: FontWeight.w700,
         color: Color.fromARGB(255, 250, 82, 32)),
   );
+  ScrollController _scrollController;
+  double offset = 0.0;
+  double offsetPercent = 0.0;
 
   _MenuPageState() {
+    _scrollController = new ScrollController();
+    _scrollController.addListener(() => setState(() {
+          offset = _scrollController.offset;
+          offsetPercent = _scrollController.offset/_scrollController.position.maxScrollExtent;
+        }));
     _searchQuery.addListener(() {
       if (_searchQuery.text.isEmpty) {
         setState(() {
@@ -196,6 +207,56 @@ class _MenuPageState extends State<MenuPage> {
     }
   }
 
+  Widget _sliverAppBarHome(BuildContext context) {
+    return SliverAppBar(
+      centerTitle: true,
+      expandedHeight: 80.0,
+      pinned: true,
+      title: Text("Floom",
+          style: TextStyle(
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          )),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(25))),
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+            borderRadius:
+                new BorderRadius.vertical(bottom: Radius.circular(25)),
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.orange[700], Colors.deepOrange])),
+      ),
+    );
+  }
+
+  Widget _sliverAppBar(BuildContext context) {
+    return SliverAppBar(
+      centerTitle: true,
+      expandedHeight: 50.0,
+      pinned: true,
+      title: Text("Floom",
+          style: TextStyle(
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          )),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(25))),
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+            borderRadius:
+                new BorderRadius.vertical(bottom: Radius.circular(25)),
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.orange[700], Colors.deepOrange])),
+      ),
+    );
+  }
+
   Widget _buildAppBar(BuildContext context) {
     return new AppBar(
       title: this.appBarTitle,
@@ -257,6 +318,13 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _scrollController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocListener(
       bloc: BlocProvider.of<AuthenticationBloc>(context),
@@ -275,10 +343,25 @@ class _MenuPageState extends State<MenuPage> {
         }
       },
       child: Scaffold(
-        appBar: _buildAppBar(context),
-        body: isSearching
-            ? _buildList()
-            : _buildBody(selectedTab: _selectedIndex),
+        body: Stack(
+          children: <Widget>[
+            NestedScrollView(
+              controller: _scrollController,
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) {
+                return <Widget>[
+                  _selectedIndex == 0
+                      ? _sliverAppBarHome(context)
+                      : _sliverAppBar(context)
+                ];
+              },
+              body: isSearching
+                  ? _buildList()
+                  : _buildBody(selectedTab: _selectedIndex),
+            ),
+            _selectedIndex == 0 ? _buildSearchBar(context) : Container()
+          ],
+        ),
         bottomNavigationBar: new BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
@@ -303,5 +386,83 @@ class _MenuPageState extends State<MenuPage> {
         ),
       ),
     );
+  }
+
+  Widget _buildSearchBar(BuildContext context) {
+    // starting FAB position
+    double topMargin = 80;
+    //pixels from the top where scaling should start
+    final double opacStart = 80;
+    //pixels from top where scaling should end
+    final double opacEnd = opacStart/2;
+
+    double opacValue = 1.0;
+    double top = topMargin;
+    if (_scrollController.hasClients) {
+      top -= offset;
+      if (offset < topMargin - opacStart) {
+        // opacity stays
+        opacValue = 1.0;
+      } else if (offset < topMargin - opacEnd) {
+        //opacity reduces
+        opacValue = (topMargin - opacEnd - pow(offsetPercent, 0.1)*opacEnd) / opacEnd;
+      } else {
+        opacValue = 0.0;
+        FocusScope.of(context).requestFocus(new FocusNode());
+      }
+    }
+    
+
+    return new Positioned(
+        top: top,
+        left: MediaQuery.of(context).size.width * 0.1,
+        child: Opacity(
+          opacity: opacValue,
+          child: new Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: 45,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 5.0,
+                    offset: Offset(3.0, 3.0))
+              ],
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: TextField(
+                onTap: () {
+                  // expand the sliverappbar when tapped
+                  _scrollController.animateTo(
+                      _scrollController.position.minScrollExtent,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeOut);
+                },
+                textInputAction: TextInputAction.search,
+                autofocus: false,
+                controller: _searchQuery,
+                cursorColor: Color.fromARGB(255, 250, 82, 32),
+                style: new TextStyle(
+                  color: Color.fromARGB(255, 250, 82, 32),
+                ),
+                decoration: new InputDecoration(
+                    suffixIcon: new IconButton(
+                        splashColor: Colors.transparent,
+                        icon: Icon(Icons.search),
+                        onPressed: () {
+                          FocusScope.of(context).requestFocus(new FocusNode());
+                        },
+                        color: Color.fromARGB(255, 250, 82, 32)),
+                    hintText: "Search...",
+                    hintStyle:
+                        new TextStyle(color: Color.fromARGB(255, 250, 82, 32)),
+                    border: InputBorder.none),
+              ),
+            ),
+          ),
+        ));
   }
 }
